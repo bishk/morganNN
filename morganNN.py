@@ -57,8 +57,10 @@ seed = 7
 def larger_model():
 	# create model
 	model = Sequential()
-	model.add(Dense(1024, input_dim=1024, kernel_initializer='normal', activation='relu'))
+	model.add(Dense(2048, input_dim=1024, kernel_initializer='normal', activation='relu'))
+	model.add(Dense(1024, kernel_initializer='normal', activation='relu'))
 	model.add(Dense(512, kernel_initializer='normal', activation='relu'))
+	model.add(Dense(256, kernel_initializer='normal', activation='relu'))
 	model.add(Dense(1, kernel_initializer='normal'))
 	# Compile model
 	model.compile(loss='mean_squared_error', optimizer='adam')
@@ -67,7 +69,7 @@ def larger_model():
 numpy.random.seed(seed)
 estimators = []
 estimators.append(('standardize', StandardScaler()))
-estimators.append(('mlp', KerasRegressor(build_fn=larger_model, epochs=20, batch_size=100000, verbose=2)))
+estimators.append(('mlp', KerasRegressor(build_fn=larger_model, epochs=15, batch_size=100000, verbose=2)))
 pipeline = Pipeline(estimators)
 #kfold = KFold(n_splits=10, random_state=seed)
 #results = cross_val_score(pipeline, X, Y, cv=kfold)
@@ -86,6 +88,3 @@ def write_to_file(filename, predictions):
             f.write(str(i+1) + "," + str(p) + "\n")
 
 write_to_file("hello.csv", predictions)
-
-joblib.dump(pipeline, 'model.pkl')
-
