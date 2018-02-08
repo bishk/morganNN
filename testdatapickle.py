@@ -14,8 +14,8 @@ import cPickle
 
 df_test = pandas.read_csv("test.csv")
 test_smiles = df_test.smiles
-X_test =  list(test_smiles.apply(lambda x: list(map(int, rdmolops.LayeredFingerprint(Chem.MolFromSmiles(x),fpSize=1024).ToBitString()))))
-del df_train, train_smiles
+X_test = list(test_smiles.apply(lambda x: list(map(int, AllChem.GetMorganFingerprintAsBitVect(Chem.MolFromSmiles(x),2, nBits=1024).ToBitString()))))
+del df_test, test_smiles
 print "Test data made"
 testfile = open("testdata", 'wb')
 cPickle.dump(X_test, testfile)

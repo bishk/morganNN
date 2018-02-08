@@ -2,6 +2,7 @@ import numpy
 import pandas
 from keras.models import Sequential
 from keras.layers import Dense
+from sklearn.externals import joblib
 from keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
@@ -73,7 +74,7 @@ pipeline = Pipeline(estimators)
 #print("Larger: %.2f (%.2f) MSE" % (results.mean(), results.std()))
 pipeline.fit(X, Y)
 
-testfile = open("testdata", r)
+testfile = open("testdata",'r')
 X_test = cPickle.load(testfile)
 testfile.close()
 predictions = pipeline.predict(X_test)
@@ -86,5 +87,5 @@ def write_to_file(filename, predictions):
 
 write_to_file("hello.csv", predictions)
 
-
+joblib.dump(pipeline, 'model.pkl')
 
