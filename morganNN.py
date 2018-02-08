@@ -7,20 +7,19 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
-from rdkit import Chem
-from rdkit.Chem import Draw
-from rdkit.Chem import AllChem
-import pickle 
+#from rdkit import Chem
+#from rdkit.Chem import Draw
+#from rdkit.Chem import AllChem
+import cPickle 
 
 Xfile = open("X",'r') 
 Yfile = open("Y",'r') 
-
-X = pickle.load(Xfile)
-Y = pickle.load(Yfile)
-
-X.close()
-Y.close()
-
+print "Opened files"
+X = cPickle.load(Xfile)
+print "done X"
+Y = cPickle.load(Yfile)
+Xfile.close()
+Yfile.close()
 print "Loading data done"
 
 def baseline_model():
@@ -67,7 +66,7 @@ def larger_model():
 numpy.random.seed(seed)
 estimators = []
 estimators.append(('standardize', StandardScaler()))
-estimators.append(('mlp', KerasRegressor(build_fn=larger_model, epochs=100, batch_size=1000, verbose=1)))
+estimators.append(('mlp', KerasRegressor(build_fn=larger_model, epochs=20, batch_size=100000, verbose=2)))
 pipeline = Pipeline(estimators)
 #kfold = KFold(n_splits=10, random_state=seed)
 #results = cross_val_score(pipeline, X, Y, cv=kfold)
@@ -75,5 +74,5 @@ pipeline = Pipeline(estimators)
 pipeline.fit(X, Y)
 
 Pfile = open("model", "wb")
-pickle.dump(pipeline, Pfile)
+cPickle.dump(pipeline, Pfile)
 Pfile.close()
