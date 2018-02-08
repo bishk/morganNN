@@ -73,6 +73,18 @@ pipeline = Pipeline(estimators)
 #print("Larger: %.2f (%.2f) MSE" % (results.mean(), results.std()))
 pipeline.fit(X, Y)
 
-Pfile = open("model", "wb")
-cPickle.dump(pipeline, Pfile)
-Pfile.close()
+testfile = open("testdata", r)
+X_test = cPickle.load(testfile)
+testfile.close()
+predictions = pipeline.predict(X_test)
+
+def write_to_file(filename, predictions):
+    with open(filename, "w") as f:
+        f.write("Id,Prediction\n")
+        for i,p in enumerate(predictions):
+            f.write(str(i+1) + "," + str(p) + "\n")
+
+write_to_file("hello.csv", predictions)
+
+
+
